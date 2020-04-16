@@ -1,0 +1,17 @@
+<form class="form">
+	<mat-form-field class="example-full-width">
+		<input 
+			matInput
+			aria-label="City"
+			[matAutocomplete]="auto"
+			[formControl]="cityCtrl"
+			(blur)="resetCityValue()"
+		>
+		<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onCitySelected($event)" (optionActivated)="onCitySelected($event)" (closed)="resetCityValue()">
+			<mat-option *ngFor="let city of citySuggestions | async" [value]="city">
+				<img class="flag-img" aria-hidden [src]="city.flag">
+				<span>{{ city.name }}</span> |
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+</form>

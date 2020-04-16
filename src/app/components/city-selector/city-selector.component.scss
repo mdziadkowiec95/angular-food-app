@@ -1,0 +1,20 @@
+.form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.flag-img {
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+[dir='rtl'] .flag-img {
+  margin-right: 0;
+  margin-left: 8px;
+}

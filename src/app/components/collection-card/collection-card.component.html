@@ -1,0 +1,15 @@
+<a [routerLink]="['/restaurants']" [queryParams]="{ collection_id: collection.collection_id }">
+  <mat-card class="card">
+    <div class="card__img" [ngStyle]="{ 'background-image': 'url(' + collection.image_url + ')' }"></div>
+    <div class="card__content">
+      <mat-card-header>
+        <mat-card-title>{{ collection.title }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p [title]="collection.description">
+          {{ collection.description | slice:0:60 }}...
+        </p>
+      </mat-card-content>
+    </div>
+  </mat-card>
+</a>

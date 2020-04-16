@@ -1,0 +1,12 @@
+<section *ngIf="collections.length">
+    <ul class="list">
+        <li *ngFor="let collection of collections" class="list__item">
+            <app-collection-card [collection]="collection"></app-collection-card>
+        </li>
+        <li *ngIf="!showAll" class="list__item">
+            <mat-card class="show-more-card">
+                <a mat-button [routerLink]="['/collections']">All collections in {{ (city | async)?.name }}</a>
+            </mat-card>
+        </li>
+    </ul>
+</section>

@@ -1,0 +1,6 @@
+<div class="container">
+    <h2 class="mat-h1">Restaurants</h2>
+    <div *ngIf="restaurantsData$">
+        <p *ngFor="let restaurant of (restaurantsData$ | async)?.restaurants">{{ restaurant.name }}</p>
+    </div>
+</div>
