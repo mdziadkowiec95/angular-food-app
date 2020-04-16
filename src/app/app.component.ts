@@ -7,9 +7,7 @@ import { FoodService } from './services/food.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private foodService: FoodService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.foodService.city.subscribe(city => this.city = city);
-  }
+  ngOnInit(): void {}
 }
