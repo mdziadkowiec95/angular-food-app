@@ -1,6 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared/shared.module';
@@ -13,6 +17,15 @@ import { CollectionsBoxComponent } from './components/collections-box/collection
 import { CollectionsComponent } from './pages/collections/collections.component';
 import { CollectionCardComponent } from './components/collection-card/collection-card.component';
 import { RestaurantsComponent } from './pages/restaurants/restaurants.component';
+import { LoaderComponent } from './shared/components/loader/loader.component';
+
+const fbConfig = {
+  apiKey: "AIzaSyD6E9OYBX72KCRcnwPAzDjVy8MmDbbEgfw",
+  authDomain: "stackblitzfire.firebaseapp.com",
+  databaseURL: "https://stackblitzfire.firebaseio.com",
+  storageBucket: "stackblitzfire.appspot.com",
+  messagingSenderId: "42917465053"
+}
 
 @NgModule({
   declarations: [
@@ -23,14 +36,18 @@ import { RestaurantsComponent } from './pages/restaurants/restaurants.component'
     CollectionsBoxComponent,
     CollectionsComponent,
     CollectionCardComponent,
-    RestaurantsComponent
+    RestaurantsComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SharedModule,
     AngularMaterialModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    // AngularFireModule.initializeApp(fbConfig),
+    // AngularFirestoreModule,
+    // AngularFireAuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

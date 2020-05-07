@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FoodService } from './services/food.service';
+import { City } from './shared/models/city';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,14 @@ import { FoodService } from './services/food.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor() {}
+  isCityLoaded = false;
 
-  ngOnInit(): void {}
+  constructor(private foodService: FoodService) {}
+
+  ngOnInit(): void {
+    this.foodService.getInitialCity().subscribe((city: City) => {
+        this.foodService.setCity(city);
+        this.isCityLoaded = city && city.id ? true : false;
+    });
+  }
 }

@@ -3,9 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CollectionsComponent } from './pages/collections/collections.component';
 import { RestaurantsComponent } from './pages/restaurants/restaurants.component';
+import { CityGuard } from './shared/guards/city.guard';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
+  { path: '', component: DashboardComponent},
   { path: 'collections', component: CollectionsComponent },
   { path: 'restaurants', component: RestaurantsComponent },
 ];

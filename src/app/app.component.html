@@ -1,3 +1,7 @@
 <app-navbar></app-navbar>
 
-<router-outlet></router-outlet>
+<main class="main-content">
+    <router-outlet *ngIf="isCityLoaded"></router-outlet>
+</main>
+
+<app-loader></app-loader>

@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, BehaviorSubject, forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, finalize } from 'rxjs/operators';
 import { config } from 'src/environments/environment';
 import { citiesResponse } from 'src/api-mocks/cities';
 import { cuisinesResponse } from 'src/api-mocks/cuisines';
@@ -10,6 +10,9 @@ import { CollectionsResponse, Collection } from '../shared/models/collections';
 import { CuisinesResponse } from '../shared/models/cuisine';
 import { collectionsResponse } from 'src/api-mocks/collections';
 import { mergeParams } from '../shared/utils/queryParams';
+import { LoaderService } from './loader.service';
+
+const lsCityIdKey = 'mdz-food-app-city-id';
 
 const mockCity = {
   id: 61,
@@ -42,20 +45,41 @@ export class FoodService {
     'user-key': config.apiKey
   });
   private baseUrl = 'https://developers.zomato.com/api/v2.1';
+  isLoadingCity: BehaviorSubject<boolean> = new BehaviorSubject(true);
   city: BehaviorSubject<City> = new BehaviorSubject(null);
+
   cuisines: BehaviorSubject<any> = new BehaviorSubject([]);
   cuisinesError: any = null;
+
   collections: BehaviorSubject<any> = new BehaviorSubject([]);
   collectionsError: any = null;
 
-  constructor(private http: HttpClient) {
-    const city = this.getInitialCity();
-    this.setCity(city);
+  constructor(private http: HttpClient, private loaderService: LoaderService) {}
 
-  }
+  getInitialCity(): Observable<City> {
+    this.loaderService.setIsLoading(true);
 
-  getInitialCity(): City {
-    return defaultCity;
+    let obs: Observable<City>;
+
+    const storedCityId = localStorage.getItem(lsCityIdKey);
+    if (storedCityId) {
+      const url = `${this.baseUrl}/cities?city_ids=${storedCityId}`;
+
+      obs = this.http.get<any>(url, { headers: this.headers })
+        .pipe(map(data => {
+          return data.location_suggestions.length > 0 ? data.location_suggestions[0] : defaultCity;
+        }));
+    } else {
+      obs = of(defaultCity);
+    }
+
+    obs.pipe(finalize(() => {
+      this.loaderService.setIsLoading(false);
+      this.isLoadingCity.next(false);
+    }
+      )).subscribe();
+
+    return obs;
   }
 
   getCitySuggestions(query: string): Observable<any> {
@@ -77,8 +101,16 @@ export class FoodService {
     const prevCity = this.city.getValue();
 
     if (!prevCity || prevCity.id !== newCity.id) {
+      this.storeSelectedCity(newCity);
+
       this.city.next(newCity);
       this.getCurrentCityData();
+    }
+  }
+
+  private storeSelectedCity(city: City): void {
+    if (city && city.id) {
+      localStorage.setItem(lsCityIdKey, city.id.toString());
     }
   }
 
@@ -152,7 +184,10 @@ export class FoodService {
 
     const obs = this.http.get<any>(url, { headers: this.headers })
       .pipe(
-        map((data: CollectionsResponse) => data.collections.map((item: { collection: Collection }) => item.collection)),
+        map((data: CollectionsResponse) => {
+          return data.collections ?
+           data.collections.map((item: { collection: Collection }) => item.collection) : [];
+        }),
         catchError(this.handleRequestError)
       );
 
@@ -168,6 +203,6 @@ export class FoodService {
     const url = `${this.baseUrl}/search?city_id=${city.id}&${paramStr}`;
 
     return this.http.get<any>(url, { headers: this.headers })
-      .pipe(map(data => ({ ...data, restaurants: data.restaurants.map(r => r.restaurant)})));
+      .pipe(map(data => ({ ...data, restaurants: data.restaurants.map(r => r.restaurant) })));
   }
 }
