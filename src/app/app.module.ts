@@ -18,14 +18,11 @@ import { CollectionsComponent } from './pages/collections/collections.component'
 import { CollectionCardComponent } from './components/collection-card/collection-card.component';
 import { RestaurantsComponent } from './pages/restaurants/restaurants.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
+import { AuthBoxComponent } from './components/auth-box/auth-box.component';
 
 const fbConfig = {
-  apiKey: "AIzaSyD6E9OYBX72KCRcnwPAzDjVy8MmDbbEgfw",
-  authDomain: "stackblitzfire.firebaseapp.com",
-  databaseURL: "https://stackblitzfire.firebaseio.com",
-  storageBucket: "stackblitzfire.appspot.com",
-  messagingSenderId: "42917465053"
-}
+  // your firebase config
+};
 
 @NgModule({
   declarations: [
@@ -37,7 +34,8 @@ const fbConfig = {
     CollectionsComponent,
     CollectionCardComponent,
     RestaurantsComponent,
-    LoaderComponent
+    LoaderComponent,
+    AuthBoxComponent
   ],
   imports: [
     BrowserModule,
@@ -45,9 +43,9 @@ const fbConfig = {
     SharedModule,
     AngularMaterialModule,
     BrowserAnimationsModule,
-    // AngularFireModule.initializeApp(fbConfig),
-    // AngularFirestoreModule,
-    // AngularFireAuthModule,
+    AngularFireModule.initializeApp(fbConfig),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

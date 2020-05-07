@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FoodService } from './services/food.service';
 import { City } from './shared/models/city';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,9 +11,14 @@ import { City } from './shared/models/city';
 export class AppComponent implements OnInit {
   isCityLoaded = false;
 
-  constructor(private foodService: FoodService) {}
+  constructor(private auth: AuthService, private foodService: FoodService) {}
 
   ngOnInit(): void {
+
+    this.auth.user$.subscribe(user => {
+      console.log(user);
+    });
+
     this.foodService.getInitialCity().subscribe((city: City) => {
         this.foodService.setCity(city);
         this.isCityLoaded = city && city.id ? true : false;

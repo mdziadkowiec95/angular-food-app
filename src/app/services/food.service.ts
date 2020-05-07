@@ -42,7 +42,7 @@ const defaultCity: City = {
 export class FoodService {
   private headers: HttpHeaders = new HttpHeaders({
     'content-type': 'application/json',
-    'user-key': config.apiKey
+    'user-key': config.apiKey + 'wrong'
   });
   private baseUrl = 'https://developers.zomato.com/api/v2.1';
   isLoadingCity: BehaviorSubject<boolean> = new BehaviorSubject(true);
