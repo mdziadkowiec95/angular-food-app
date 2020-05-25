@@ -5,14 +5,8 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { FoodService } from 'src/app/services/food.service';
-import { of } from 'rxjs';
-
-
-export interface CitySuggestion {
-  id: number;
-  flag: string;
-  name: string;
-}
+import { of, Observable } from 'rxjs';
+import { City } from 'src/app/shared/models/city';
 
 @Component({
   selector: 'app-city-selector',
@@ -20,22 +14,24 @@ export interface CitySuggestion {
   styleUrls: ['./city-selector.component.scss']
 })
 export class CitySelectorComponent implements OnInit {
+  isLoadingCity$: Observable<boolean>;
   prevCity: AbstractControl = new FormControl();
   cityCtrl: AbstractControl = new FormControl();
   citySuggestions: any;
-  // private searchTerms = new Subject<string>();
 
   constructor(
     private foodService: FoodService
   ) { }
 
   ngOnInit(): void {
+    this.isLoadingCity$ = this.foodService.isLoadingCity;
+
     this.setInitialCity();
 
     this.citySuggestions = this.cityCtrl.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap((value: string | CitySuggestion) => {
+      switchMap((value: string | City) => {
         // if value is a string it means that current value should be treated as search query
         // else the value is bound to City suggestion object so we don't want to show suggestion list
         if (typeof value === 'string') {
@@ -45,33 +41,17 @@ export class CitySelectorComponent implements OnInit {
         }
       })
     );
-
-    // this.searchTerms
-    //   .pipe(
-    //     debounceTime(400),
-    //     distinctUntilChanged(),
-    //     switchMap((term: string) => this.foodService.getCitySuggestions(term))
-    //   )
-    //   .subscribe(suggestions => {
-    //     this.citySuggestions = suggestions;
-    //   });
   }
 
-  // search(term: string): void {
-  //   if (typeof term === 'string') {
-  //     this.searchTerms.next(term.toLowerCase());
-  //   }
-  // }
-
   setInitialCity(): void {
-    const initialCity = this.foodService.getInitialCity();
-
-    this.cityCtrl.setValue(initialCity);
-    this.prevCity.setValue(initialCity);
+    this.foodService.city.subscribe((city: City) => {
+      this.cityCtrl.setValue(city);
+      this.prevCity.setValue(city);
+    });
   }
 
   onCitySelected(event: MatAutocompleteSelectedEvent): void {
-    const city: CitySuggestion = event.option.value;
+    const city: City = event.option.value;
 
     this.prevCity.setValue(city);
     this.foodService.setCity(city);
@@ -84,7 +64,7 @@ export class CitySelectorComponent implements OnInit {
     }
   }
 
-  displayFn(option: CitySuggestion): string {
+  displayFn(option: City): string {
     return option ? option.name : '';
   }
 }

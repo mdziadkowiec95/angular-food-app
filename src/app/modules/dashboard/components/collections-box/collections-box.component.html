@@ -5,7 +5,7 @@
         </li>
         <li *ngIf="!showAll" class="list__item">
             <mat-card class="show-more-card">
-                <a mat-button [routerLink]="['/collections']">All collections in {{ (city | async)?.name }}</a>
+                <a mat-button routerLink="collections">All collections in {{ (city | async)?.name }}</a>
             </mat-card>
         </li>
     </ul>

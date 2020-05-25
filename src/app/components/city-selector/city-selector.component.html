@@ -1,12 +1,22 @@
 <form class="form">
 	<mat-form-field class="example-full-width">
-		<input 
-			matInput
-			aria-label="City"
-			[matAutocomplete]="auto"
-			[formControl]="cityCtrl"
-			(blur)="resetCityValue()"
-		>
+		<div class="field">
+			<mat-spinner
+				*ngIf="(isLoadingCity$ | async) || !cityCtrl.value"
+				class="field__spinner"
+				color="accent"
+				diameter="20"
+				>
+			</mat-spinner>
+			<input 
+				matInput
+				aria-label="City"
+				[readonly]="(isLoadingCity$ | async) || !cityCtrl.value"
+				[matAutocomplete]="auto"
+				[formControl]="cityCtrl"
+				(blur)="resetCityValue()"
+			>
+		</div>
 		<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onCitySelected($event)" (optionActivated)="onCitySelected($event)" (closed)="resetCityValue()">
 			<mat-option *ngFor="let city of citySuggestions | async" [value]="city">
 				<img class="flag-img" aria-hidden [src]="city.flag">

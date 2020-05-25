@@ -7,7 +7,7 @@ export const environment = {
 };
 
 export const config = {
-  apiKey: 'ZOMATO_API_KEY'
+  apiKey: '0c5fa99210a162d7e2e0c83f51d8c61a'
 };
 
 /*
